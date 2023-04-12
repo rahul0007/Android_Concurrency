@@ -13,9 +13,11 @@
   * [Table of Differences Function](#table-of-differences)
   * [Dispatchers](#dispatchers)
   * [Coroutine Scope](#coroutine-scope)
+  * [SuspendCancellableCoroutine](#Suspendcancellablecoroutine)
+  * [suspendCoroutine](#suspendcoroutine)
+
+
 ## Use cases
-
-
 
 
 A coroutine can be thought of as an instance of _suspendable computation_, i.e. the one that can suspend at some 
@@ -179,6 +181,33 @@ The scope creates relationships between coroutines inside it and allows us to ma
 
   * Custom Coroutine Scope :- There might be cases when we need to have some specific behavior of the scope to get a different approach in managing the coroutines. To achieve that, we can implement the CoroutineScope interface and implement our custom scope for coroutine handling.
 
+### Coroutine scopes
 
+There are libraries that actually help us do structured concurrency without having to write boilerplate in every ViewModel. In order to use these libraries, we need to know the types of coroutine scopes that exist.
 
+Scope in Kotlin’s coroutines can be defined as the restrictions within which the Kotlin coroutines are being executed. Scopes help to predict the lifecycle of the coroutines. There are basically 3 scopes in Kotlin coroutines:
+
+* 1 Global Scope
+* 2 LifeCycle Scope
+* 3 ViewModel Scope
+
+### GlobalScope 
+
+A global CoroutineScope not bound to any job. Global scope is used to launch top-level coroutines which are operating on the whole application lifetime and are not cancelled prematurely. Active coroutines launched in GlobalScope do not keep the process alive. They are like daemon threads
+
+### LifecycleScope 
+
+LifecycleScope. A LifecycleScope is defined for each Lifecycle object. Any coroutine launched in this scope is canceled when the Lifecycle is destroyed. You can access the CoroutineScope of the Lifecycle either via lifecycle. coroutineScope or lifecycleOwner.
+
+### ViewModelScope
+
+A ViewModelScope is defined for each ViewModel in your app. Any coroutine launched in this scope is automatically canceled if the ViewModel is cleared. Coroutines are useful here for when you have work that needs to be done only if the ViewModel is active.
+
+### SuspendCancellableCoroutine
+
+SuspendCancellableCoroutine returns a CancellableContinuation for us to use resume, resumeWithException and throws CancellationException if the continuation is cancelled. (There is another similar function called suspendCoroutine . The difference between them is that suspendCoroutine cannot be cancelled by Job
+
+### suspendCoroutine
+
+suspendCoroutine is a builder function that mainly used to convert callbacks into suspend functions. Let's say for example you have some legacy (or not) Api, that uses callbacks
 
